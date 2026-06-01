@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Kinh phí</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-success">Quản lý Thu / Chi Kinh phí</h2>
+            <a href="/" class="btn btn-secondary">⬅ Quay lại Trang chủ</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <strong>Thông báo:</strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng Thu</h5>
+                        <h3>{{ "{:,.0f}".format(tong_thu) }} VNĐ</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-danger shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng Chi</h5>
+                        <h3>{{ "{:,.0f}".format(tong_chi) }} VNĐ</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Lợi nhuận (Tồn quỹ)</h5>
+                        <h3>{{ "{:,.0f}".format(tong_thu - tong_chi) }} VNĐ</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-3 shadow-sm rounded mb-5">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-success text-center">
+                    <tr>
+                        <th>Mã Lớp</th>
+                        <th>Môn thi</th>
+                        <th>Sĩ số</th>
+                        <th style="width: 15%">Thu (VNĐ)</th>
+                        <th style="width: 15%">Chi (VNĐ)</th>
+                        <th style="width: 20%">Ghi chú</th>
+                        <th>Lưu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lt in danh_sach_lt %}
+                    <tr>
+                        <td class="fw-bold text-center">{{ lt.ma_lop }}</td>
+                        <td>{{ lt.ten_hp }}</td>
+                        <td class="text-center">{{ lt.si_so }}</td>
+                        <form action="/cap_nhat_kinh_phi/{{ lt.id }}" method="POST">
+                            <td>
+                                <input type="number" class="form-control" name="thu" value="{{ lt.thu or 0 }}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="chi" value="{{ lt.chi or 0 }}">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="ghi_chu_kinh_phi" value="{{ lt.ghi_chu_kinh_phi or '' }}" placeholder="Ví dụ: Tiền giấy thi...">
+                            </td>
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-sm btn-success">Lưu</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê Gác thi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-primary">Thống kê Số ca Gác thi của Cán bộ</h2>
+            <a href="/" class="btn btn-secondary">⬅ Quay lại Trang chủ</a>
+        </div>
+
+        <div class="bg-white p-4 shadow-sm rounded border-primary">
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã CB</th>
+                        <th>Họ và Tên</th>
+                        <th>Vai trò</th>
+                        <th>Tổng số ca gác thi</th>
+                        <th>Chi tiết các môn gác thi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cb in danh_sach_cb %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td class="fw-bold">{{ cb.ma_cb }}</td>
+                        <td class="text-start">{{ cb.ten_cb }}</td>
+                        <td>
+                            <span class="badge bg-info text-dark">{{ cb.vai_tro }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-danger rounded-pill fs-6">{{ cb.phan_cong|length }}</span>
+                        </td>
+                        <td class="text-start">
+                            {% if cb.phan_cong %}
+                                <ul class="mb-0 ps-3">
+                                {% for pc in cb.phan_cong %}
+                                    <li class="small text-muted">
+                                        {{ pc.lich_thi.ten_hp }} (Ngày: {{ pc.lich_thi.ngay_thi }}, Kíp: {{ pc.lich_thi.kip_thi }})
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <span class="text-muted small">Chưa được phân công</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Phân công Cán bộ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h3 class="mb-4">Phân công coi thi cho lớp: <span class="text-primary">{{ lich.ma_lop }}</span></h3>
+        
+        <div class="alert alert-info">
+            <strong>Thông tin ca thi:</strong> <br>
+            Môn: {{ lich.ten_hp }} | Ngày thi: {{ lich.ngay_thi }} | Kíp: {{ lich.kip_thi }} <br>
+            Sĩ số: {{ lich.si_so }} sinh viên -> Cần <strong>{{ lich.so_luong_can_bo_yeu_cau() }}</strong> cán bộ.
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <strong>Chú ý!</strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+<div class="mb-4">
+            <h5>Cán bộ đã phân công ({{ so_luong_da_phan_cong }}/{{ so_luong_yeu_cau }}):</h5>
+            <ul class="list-group">
+                {% for pc in danh_sach_da_phan_cong %}
+                    <li class="list-group-item list-group-item-success d-flex justify-content-between align-items-center">
+                        <span>✅ {{ pc.can_bo.ma_cb }} - {{ pc.can_bo.ten_cb }}</span>
+                        
+                        <form action="/xoa_phan_cong/{{ pc.id }}" method="POST" class="m-0">
+                            <button type="submit" class="btn btn-sm btn-danger" 
+                                    onclick="return confirm('Bạn có chắc chắn muốn hủy phân công cán bộ này không?');">
+                                ❌ Xóa
+                            </button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="list-group-item text-muted">Chưa có cán bộ nào được phân công.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if so_luong_da_phan_cong < so_luong_yeu_cau %}
+            <form action="/phan_cong/{{ lich.id }}" method="POST" class="card p-4 shadow-sm border-primary">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Chọn cán bộ coi thi (Cần thêm {{ so_luong_yeu_cau - so_luong_da_phan_cong }} người):</label>
+                    <select name="can_bo_id" class="form-select" required>
+                        <option value="">-- Chọn cán bộ --</option>
+                        {% for cb in danh_sach_cb %}
+                            <option value="{{ cb.id }}">{{ cb.ma_cb }} - {{ cb.ten_cb }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">Lưu Phân Công</button>
+                    <a href="/" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        {% else %}
+            <div class="alert alert-success text-center shadow-sm">
+                <h4 class="alert-heading">🎉 Hoàn tất!</h4>
+                <p>Ca thi này đã được phân công đủ số lượng cán bộ yêu cầu.</p>
+                <hr>
+                <a href="/" class="btn btn-success">Về trang chủ</a>
+            </div>
+        {% endif %}
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
