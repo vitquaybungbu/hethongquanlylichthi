@@ -60,7 +60,7 @@ http://127.0.0.1:5000/
  ┗ 📜 README.md            # Tài liệu dự án
  ```
 
-##👨‍💻 Đội ngũ phát triển (Nhóm Mr. Beast)
+## 👨‍💻 Đội ngũ phát triển (Nhóm Mr. Beast)
 Đỗ Nguyễn Việt Anh (Leader) - Phân tích hệ thống & Fullstack
 
 Nguyễn Thế Dương - Backend & Database
