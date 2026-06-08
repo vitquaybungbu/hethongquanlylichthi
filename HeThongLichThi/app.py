@@ -66,7 +66,7 @@ class PhanCong(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def trang_chu():
-    # 1. Nếu người dùng bấm nút "Thêm vào DB" (Hành động POST)
+    # 1. Nếu người dùng bấm nút "Thêm vào danh sách" (Hành động POST)
     if request.method == 'POST':
         # Lấy dữ liệu từ các ô input trên web
         ma = request.form['ma_cb']
@@ -288,6 +288,34 @@ def cap_nhat_kinh_phi(id):
     db.session.commit()
     flash(f"Đã cập nhật kinh phí cho lớp {lich.ma_lop} thành công 🦆!", "success")
     return redirect(url_for('quan_ly_kinh_phi'))
+
+@app.route('/xoa_can_bo/<int:id>', methods=['POST'])
+def xoa_can_bo(id):
+    cb_can_xoa = CanBo.query.get_or_404(id)
+    
+    # 1. Xóa toàn bộ các phân công gác thi liên quan đến cán bộ này trước
+    PhanCong.query.filter_by(can_bo_id=cb_can_xoa.id).delete()
+    
+    # 2. Xóa cán bộ khỏi hệ thống
+    db.session.delete(cb_can_xoa)
+    db.session.commit()
+    
+    flash(f"Đã xóa cán bộ {cb_can_xoa.ten_cb} và các lịch gác liên quan!", "success")
+    return redirect(url_for('trang_chu'))
+
+@app.route('/xoa_lich_thi/<int:id>', methods=['POST'])
+def xoa_lich_thi(id):
+    lt_can_xoa = LichThi.query.get_or_404(id)
+    
+    # 1. Xóa toàn bộ các phân công gác thi liên quan đến ca thi này
+    PhanCong.query.filter_by(lich_thi_id=lt_can_xoa.id).delete()
+    
+    # 2. Xóa lịch thi
+    db.session.delete(lt_can_xoa)
+    db.session.commit()
+    
+    flash(f"Đã xóa lịch thi lớp {lt_can_xoa.ma_lop} thành công!", "success")
+    return redirect(url_for('trang_chu'))
 
 # =======================================
 # PHẦN 3: CHẠY ỨNG DỤNG

@@ -55,7 +55,7 @@
                         <th>Mã CB</th>
                         <th>Họ và Tên</th>
                         <th>Vai trò</th>
-                    </tr>
+                        <th class="text-center">Thao tác</th> </tr>
                 </thead>
                 <tbody>
                     {% for cb in danh_sach_cb %}
@@ -63,10 +63,17 @@
                         <td>{{ cb.ma_cb }}</td>
                         <td>{{ cb.ten_cb }}</td>
                         <td>{{ cb.vai_tro }}</td>
+                        <td class="text-center">
+                            <form action="/xoa_can_bo/{{ cb.id }}" method="POST" class="m-0">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa cán bộ này? Mọi lịch gác của họ sẽ bị hủy!');">
+                                    ❌ Xóa
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="3" class="text-center text-muted">Chưa có dữ liệu. Hãy thêm cán bộ ở form bên trên!</td>
+                        <td colspan="4" class="text-center text-muted">Chưa có dữ liệu. Hãy thêm cán bộ ở form bên trên!</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -157,7 +164,15 @@
                         <td>{{ lt.si_so }}</td>
                         <td class="text-center fw-bold text-danger">{{ lt.so_luong_can_bo_yeu_cau() }}</td>
                         <td>
-                            <a href="/phan_cong/{{ lt.id }}" class="btn btn-sm btn-warning">Phân công</a>
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a href="/phan_cong/{{ lt.id }}" class="btn btn-sm btn-warning">Phân công</a>
+                                
+                                <form action="/xoa_lich_thi/{{ lt.id }}" method="POST" class="m-0">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa lịch thi này không?');">
+                                        ❌ Xóa
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     {% else %}
